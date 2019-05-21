@@ -6,6 +6,10 @@
 
 vue2 + vuex + vue-router + webpack + ES6/7 + axios + iview3+
 
+#### 下载地址
+
+https://github.com/Roc-zhou/sys-demo.git
+
 ####  说明
 
 简单通用可配置后台管理系统
