@@ -16,11 +16,13 @@ export default {
   },
   methods: {
     async getData() {
-      const data = await this.$api("/url", {
+      // await
+      this.$api("/app/getList", {
         pageSize: 10,
         pageNum: 1
-      });
-      console.log(data);
+      }).then(r => {
+        console.log(r);
+      })
     }
   }
 };

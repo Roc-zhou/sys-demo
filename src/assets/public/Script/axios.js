@@ -1,9 +1,10 @@
 import axios from 'axios'
+import router from '../../../router'
 
 // 创建一个axios实例
 const instance = axios.create({
   baseURL: '/sys',
-  // timeout: 1000,
+  timeout: 10000,
   headers: {
     // name: 'demo'
   },
@@ -35,7 +36,7 @@ instance.interceptors.request.use((config) => {
 })
 
 // 添加响应拦截器
-instance.interceptors.response.use(function (response) {
+instance.interceptors.response.use((response) => {
   // TODO
   const ResponseHeaders = response.config.headers,
     data = JSON.parse(response.data),
@@ -51,20 +52,21 @@ instance.interceptors.response.use(function (response) {
       sendResponse
     },
   })
-  if (data.code === 200) return data
-  else if (data.code === 301 || code === 302 ||
-    code === 303) {
-    // TODO
+  if (data.code === 200) return data.body
+  else if (data.code === 301) {
+    //TODO 重定向等...
+    router.push('/')
     return null
+  } else {
+    return Promise.reject(data)
   }
-  return null;
-}, function (error) {
+}, (err) => {
   // 对响应错误做点什么
-  return Promise.reject(error);
+  return Promise.reject(err);
 });
 
 //线下输出线上关闭
-const _output = (e) => {
+const _output = e => {
   const Debug = !!~location.origin.indexOf('http://localhost:') || !!~location.origin.indexOf('http://192.168.') || !!~location.origin.indexOf('http://127.0.0.1:') || !!~location.origin.indexOf('http://0.0.0.0:')
   return Debug && console.log(`%ctitle：${e.title}\n%cfrom：${document.title}\n%cdata：%o`, 'color:#cc7832;border-bottom:1px solid #57a3f3', 'color:#6a7c4e;border-bottom:1px solid #f7f7f7', 'color:#d24f4d', e.content)
 }
@@ -74,23 +76,32 @@ const _output = (e) => {
  * @param {*} url
  * @param {*} params
  */
-export const $api = (url, params) => instance.get(url, { params: params })
-  .then(function (response) {
-    return response
+export const $api = (url, params) => {
+  return new Promise((res, rej) => {
+    instance.get(url, { params: params })
+      .then(data => {
+        res(data)
+      })
+      .catch(err => {
+        rej(err)
+      });
   })
-  .catch(function (error) {
-    return error
-  });
+}
 /**
  *
  * post 请求
  * @param {*} url
  * @param {*} params
  */
-export const $http = (url, params) => instance.post(url, params)
-  .then(function (response) {
-    return response
+export const $http = (url, params) => {
+  return new Promise((res,rej) => {
+    instance.post(url, params)
+      .then(data => {
+        res(data)
+      })
+      .catch(error => {
+        rej(error)
+      });
   })
-  .catch(function (error) {
-    return error
-  });
+}
+
