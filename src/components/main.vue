@@ -1,35 +1,28 @@
 <template>
   <div class="layout">
-    <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-      <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
+    <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}" class="menu">
+      <Menu :active-name="activeName" theme="dark" width="auto" :open-names="openNames">
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-navigate"></Icon>菜单一
           </template>
-          <MenuItem name="1-1" to="/">one</MenuItem>
-          <MenuItem name="1-2" to="/b">two</MenuItem>
-        </Submenu>
-        <Submenu name="2">
-          <template slot="title">
-            <Icon type="ios-keypad"></Icon>菜单二
-          </template>
-          <MenuItem name="2-1">one</MenuItem>
-          <MenuItem name="2-2">two</MenuItem>
+          <MenuItem name="1-1" to="/main">one</MenuItem>
+          <MenuItem name="1-2" to="/main/b">two</MenuItem>
         </Submenu>
       </Menu>
     </Sider>
     <Layout :style="{marginLeft: '200px'}">
       <Header
         :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}"
-        class="justify-end items-center"
+        class="justify-between items-center"
       >
-        <Button>退出</Button>
+        <span class="header_name">后台管理系统</span>
+        <Button @click.stop="$goto('/')">退出</Button>
       </Header>
       <Content :style="{padding: '0 16px 16px'}">
         <Breadcrumb :style="{margin: '16px 0'}">
-          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem to="/main">首页</BreadcrumbItem>
           <BreadcrumbItem>Components</BreadcrumbItem>
-          <BreadcrumbItem>Layout</BreadcrumbItem>
         </Breadcrumb>
         <Card>
           <div style="min-height: 700px">
@@ -41,7 +34,27 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  beforeRouteEnter(to, from, next) {
+    return next(vm => {
+      vm.activeName = vm.$route.meta.activeName;
+      vm.openNames = vm.$route.meta.openNames;
+    });
+  },
+  name: "home",
+  data() {
+    return {
+      activeName: "1-1",
+      openNames: ["1"]
+    };
+  },
+  watch: {
+    ["$route"](n, o) {
+      this.activeName = n.meta.activeName;
+      this.openNames = n.meta.openNames;
+    }
+  }
+};
 </script>
 <style scoped>
 .layout {
@@ -54,5 +67,26 @@ export default {};
 .layout-header-bar {
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.header_name {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened {
+  background: #000c17;
+}
+.menu >>> .ivu-menu-dark {
+  background: #001529;
+}
+.ivu-layout-sider {
+  background: #001529;
+}
+.menu >>> .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title {
+  background: #001529;
+}
+.menu >>> .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+  background: #001529;
+  color: #fff;
 }
 </style>

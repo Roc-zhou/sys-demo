@@ -17,7 +17,6 @@ Object.assign(Vue.prototype, {
     const {
       $data,
       $router,
-      $scrollTop,
     } = this;
     if (obj) boolean ? $router[attr || 'push'](obj) : window[attr || 'open'](obj)
     return $router

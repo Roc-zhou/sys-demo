@@ -5,22 +5,30 @@ export default [{
   component: () =>
     import('./HelloWorld'),
 }, {
-  path: '/login',
+  path: '/',
   name: 'login',
   component: () => import('./login.vue')
 }, {
-  path: '/',
+  path: '/main',
   component: Main,
   children: [
     {
       path: '',
       name: 'a',
-      component: () => import('./a.vue')
+      component: () => import('./a.vue'),
+      meta: {
+        activeName: '1-1',
+        openNames: ['1']
+      }
     },
     {
       path: 'b',
       name: 'b',
-      component: () => import('./b.vue')
+      component: () => import('./b.vue'),
+      meta: {
+        activeName: '1-2',
+        openNames: ['1']
+      }
     }
   ]
 }]
